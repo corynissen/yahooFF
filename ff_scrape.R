@@ -23,10 +23,6 @@ league.id <- "262101"
 league.key <- paste0(game.key, ".l.", league.id)
 league.url <- "http://fantasysports.yahooapis.com/fantasy/v2/league/"
 
-standings.json <- GET(paste0(league.url, league.key, "/standings?format=json"), 
-                      config(token = token))
-standings.list <- fromJSON(as.character(standings.json), asText=T)
-
 my.team.id <- "4"
 my.team.key <- paste0(league.key, ".t.", my.team.id)
 team.url <- "http://fantasysports.yahooapis.com/fantasy/v2/team/"
@@ -62,3 +58,9 @@ my.df$score <- as.numeric(as.character(my.df$score))
 p1 <- ggplot(my.df, aes(x=game, y=score, color=team, group=team)) + 
   geom_point() + geom_line() + scale_y_continuous()
 ggsave("FF_regular_season.jpg")
+
+# create blog post
+library(markdown)
+library(knitr)
+knit("YahooFF_blog_post.Rmd")
+markdownToHTML("YahooFF_blog_post.md", "YahooFF_blog_post.html", fragment.only = TRUE)
